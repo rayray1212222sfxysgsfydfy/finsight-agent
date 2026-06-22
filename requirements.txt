@@ -1,0 +1,29 @@
+# Core
+anthropic
+python-dotenv
+
+# Data
+requests
+yfinance
+pandas
+numpy
+
+# ML
+scikit-learn
+joblib
+matplotlib
+seaborn
+
+# Storage
+chromadb
+onnxruntime
+
+# Output
+reportlab
+
+# Testing
+pytest
+pytest-mock
+
+# Dev
+jupyter

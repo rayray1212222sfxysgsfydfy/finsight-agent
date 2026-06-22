@@ -1,0 +1,33 @@
+# Secrets
+.env
+
+# Data
+data/raw/
+data/finsight.db
+data/chromadb/
+
+# Reports and logs
+reports/
+logs/
+
+# Large model files
+src/models/risk_classifier.pkl
+src/models/feature_pipeline.pkl
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Jupyter checkpoints
+.ipynb_checkpoints/
+
+# macOS
+.DS_Store
