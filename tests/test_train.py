@@ -22,17 +22,17 @@ EXPECTED_FEATURES = {
     "interest_coverage",
     "revenue_growth",
     "net_margin",
-    "altman_z",
     "fedfunds",
     "t10y2y",
 }
 
 
-def test_feature_names_json_has_expected_eight_features():
+def test_feature_names_json_has_expected_seven_features():
     assert FEATURE_NAMES_PATH.exists()
     names = json.loads(FEATURE_NAMES_PATH.read_text())
-    assert len(names) == 8
+    assert len(names) == 7
     assert set(names) == EXPECTED_FEATURES
+    assert "altman_z" not in names
 
 
 def test_risk_classifier_pkl_exists():

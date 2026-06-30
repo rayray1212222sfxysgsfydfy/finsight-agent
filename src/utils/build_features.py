@@ -24,7 +24,11 @@ from src.tools.fred_tools import get_macro_snapshot
 from src.tools.market_tools import fetch_market_data
 from src.tools.sec_tools import fetch_10k_filing
 
-BANKS = ["PNC", "JPM", "BK", "WFC", "BAC"]
+BANKS = [
+    "PNC", "JPM", "BK", "WFC", "BAC",           # original 5
+    "USB", "TFC", "CFG", "FITB", "KEY",           # added batch 1
+    "RF", "HBAN", "MTB", "CMA", "ZION",           # added batch 2
+]
 YEARS = list(range(2018, 2024))  # 2018-2023 inclusive
 
 ROOT = Path(__file__).resolve().parents[2]

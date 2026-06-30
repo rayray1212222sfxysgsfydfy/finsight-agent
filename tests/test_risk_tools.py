@@ -29,7 +29,6 @@ def _valid_features() -> dict:
         "interest_coverage": 1.45,
         "revenue_growth": 0.03,
         "net_margin": 0.245,
-        "altman_z": 0.253,
         "fedfunds": 5.33,
         "t10y2y": -0.35,
     }
@@ -113,13 +112,13 @@ def test_run_ml_risk_model_missing_features_returns_error(mocker):
     mocker.patch("src.tools.risk_tools._load_pipeline", return_value=_FakePipeline())
 
     features = _valid_features()
-    del features["altman_z"]
+    del features["net_margin"]
 
     result = run_ml_risk_model(features)
 
     assert result["data"] is None
     assert isinstance(result["error"], str)
-    assert "altman_z" in result["error"]
+    assert "net_margin" in result["error"]
 
 
 # ---------------------------------------------------------------------------
