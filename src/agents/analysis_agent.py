@@ -72,22 +72,43 @@ class AnalysisAgent:
         ticker = context.get("ticker", "UNKNOWN")
         year = context.get("year", 0)
         import pandas as pd
+
+        # Chart 1: financial ratios bar chart
         chart_df = pd.DataFrame({
             "ratio": list(ratios.keys()),
             "value": [v if v is not None else 0.0 for v in ratios.values()],
         }).set_index("ratio")
         chart_result = plot_chart(
             chart_df,
-            chart_type="bar",
+            chart_type="barh",
             title=f"{ticker} {year} Financial Ratios",
             output_path=f"reports/charts/{ticker}_{year}_ratios.png",
         )
         if chart_result["error"] is not None:
-            context["warnings"].append(
-                f"Chart generation error: {chart_result['error']}"
-            )
+            context["warnings"].append(f"Chart generation error: {chart_result['error']}")
         else:
             chart_paths.append(chart_result["data"]["path"])
+
+        # Chart 2: income highlights (Revenue, Net Income, EBIT in $B)
+        _B = 1e9
+        income_data = {
+            "Revenue": (ingest.get("revenue") or 0) / _B,
+            "Net Income": (ingest.get("net_income") or 0) / _B,
+            "EBIT": (ingest.get("ebit") or 0) / _B,
+        }
+        income_df = pd.DataFrame.from_dict(
+            {"$B": income_data}, orient="index"
+        )
+        income_result = plot_chart(
+            income_df,
+            chart_type="bar",
+            title=f"{ticker} {year} Income Highlights ($B)",
+            output_path=f"reports/charts/{ticker}_{year}_income.png",
+        )
+        if income_result["error"] is not None:
+            context["warnings"].append(f"Income chart error: {income_result['error']}")
+        else:
+            chart_paths.append(income_result["data"]["path"])
 
         # 4. Assemble AnalysisOutput
         analysis: Dict[str, Any] = {

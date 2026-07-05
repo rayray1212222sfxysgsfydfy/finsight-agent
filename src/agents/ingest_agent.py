@@ -103,9 +103,29 @@ class IngestAgent:
                 filing.get("shares_outstanding"),
             )
 
-        # 5. Embed raw text for RAG — degradable
+        # 5. Embed structured financial summary for RAG — degradable
+        def _fmt(v: Any, scale: float = 1e9, suffix: str = "B") -> str:
+            return f"{v / scale:.2f}{suffix}" if v is not None else "N/A"
+
+        filing_summary = (
+            f"{ticker} {year} Annual Report (10-K) — Financial Highlights\n"
+            f"Revenue: {_fmt(filing.get('revenue'))}\n"
+            f"Net Income: {_fmt(filing.get('net_income'))}\n"
+            f"Total Assets: {_fmt(filing.get('total_assets'))}\n"
+            f"Total Liabilities: {_fmt(filing.get('total_liabilities'))}\n"
+            f"Shareholders Equity: {_fmt(filing.get('shareholders_equity'))}\n"
+            f"EBIT: {_fmt(filing.get('ebit'))}\n"
+            f"Interest Expense: {_fmt(filing.get('interest_expense'))}\n"
+            f"Retained Earnings: {_fmt(filing.get('retained_earnings'))}\n"
+            f"Cash: {_fmt(filing.get('cash'))}\n"
+            f"Market Cap: {_fmt(market_cap)}\n"
+            f"FEDFUNDS Rate: {fred_snapshot.get('FEDFUNDS', 'N/A')}%\n"
+            f"10Y-2Y Spread: {fred_snapshot.get('T10Y2Y', 'N/A')}%\n"
+            f"CPI: {fred_snapshot.get('CPIAUCSL', 'N/A')}\n"
+            f"Unemployment Rate: {fred_snapshot.get('UNRATE', 'N/A')}%\n"
+        )
         embed_result = embed_text(
-            f"{ticker} {year} 10-K",
+            filing_summary,
             metadata={"ticker": ticker, "year": year, "collection": "finsight_filings"},
         )
         if embed_result["error"] is not None:

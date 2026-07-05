@@ -61,6 +61,12 @@ class ReportAgent:
         anomalies = analysis.get("anomalies", [])
         chart_paths = analysis.get("chart_paths", [])
 
+        # Collect EDA charts from reports/charts/ for the Supplementary section
+        charts_dir = Path("reports") / "charts"
+        eda_chart_paths = sorted(
+            str(p) for p in charts_dir.glob("eda_*.png") if p.is_file()
+        ) if charts_dir.is_dir() else []
+
         # Narrative — degradable
         narrative_block = context.get("narrative")
         if narrative_block and isinstance(narrative_block, dict):
@@ -98,8 +104,8 @@ class ReportAgent:
         if table_result["error"] is not None:
             context["warnings"].append(f"ReportAgent: format_table error: {table_result['error']}")
 
-        # Ensure reports/ directory exists
-        Path("reports").mkdir(parents=True, exist_ok=True)
+        # Ensure reports/ and reports/charts/ directories exist
+        Path("reports/charts").mkdir(parents=True, exist_ok=True)
         output_path = f"reports/{ticker}_{year}_report.pdf"
 
         pdf_result = generate_pdf(
@@ -109,6 +115,11 @@ class ReportAgent:
             narrative=narrative,
             table_str=table_str,
             chart_paths=chart_paths,
+            eda_chart_paths=eda_chart_paths,
+            ingest=ingest,
+            ratios=ratios,
+            risk=risk,
+            anomalies=anomalies,
         )
         if pdf_result["error"] is not None:
             raise AgentExecutionError(

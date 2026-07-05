@@ -150,10 +150,10 @@ def run_ml_risk_model(features: Dict[str, Any]) -> Dict[str, Any]:
         return {"data": None, "error": f"Non-numeric feature: {exc}"}
 
     try:
-        pipeline = _load_pipeline()
-        model = _load_model()
-        transformed = pipeline.transform([vector])
-        proba_rows = model.predict_proba(transformed)
+        # train.py saves a single combined Pipeline (scaler + clf) to risk_classifier.pkl.
+        # Call predict_proba directly — no separate transform step needed.
+        pipeline = _load_model()
+        proba_rows = pipeline.predict_proba([vector])
         # Last column = probability of the highest-risk class.
         probability = float(proba_rows[0][-1])
         return {

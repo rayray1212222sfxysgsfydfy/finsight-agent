@@ -131,7 +131,7 @@ def test_report_agent_run_output_path_matches_pattern(mocker):
     """Output path must be reports/<TICKER>_<YEAR>_report.pdf."""
     captured = {}
 
-    def _fake_generate_pdf(output_path, ticker, year, narrative, table_str, chart_paths=None):
+    def _fake_generate_pdf(output_path, ticker, year, narrative, table_str, chart_paths=None, eda_chart_paths=None, **kwargs):
         captured["output_path"] = output_path
         return _PDF_SUCCESS
 
